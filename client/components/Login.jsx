@@ -1,72 +1,143 @@
 import axios from 'axios';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+// import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.name = React.createRef();
-    this.password = React.createRef();
-    this.state = {
-      errorMessage: '',
-    };
-    this.handleClick = this.handleClick.bind(this);
-    
-  }
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://github.com/Gemeni/LiveChat">
+        Gemeni
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
-  handleClick(event) {
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundImage: 'url(https://source.unsplash.com/random)',
+    backgroundRepeat: 'no-repeat',
+    backgroundColor:
+      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  paper: {
+    margin: theme.spacing(8, 4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+function Login(props) {
+  const classes = useStyles();
+   let form = React.createRef();
+
+  function handleClick(event) {
     event.preventDefault();
-    const username = this.name.value;
-    const password = this.password.value;
-    //console.log("username: " + username, "password: " + password);
-
+   const { username, password } = form;
+    console.log("username: ", username.value, "password: ", password.value)
     axios.post('http://localhost:3000/api/login',{
-        username,
-        password
+        username: username.value,
+        password: password.value
       
     })
     .then((data) => {
       const { isLoggedIn } = data;
-  
-      // else
-      // set error message to 'Wrong username or password!'
-      this.setState((prevState) => {
-        return {
-          ...prevState,
-          errorMessage: 'Wrong username or password!',
-        }
-      });
-      // redirect to login page
-      // return push('/login');
     }).catch((err) => console.log(err));
   }
-  render() {
+
     return (
-      <>
-        <p>{this.state.errorMessage}</p>
-        <h3>Login</h3>
-        <form onSubmit={this.handleClick} >
-          <input
-            type="text"
-            placeholder="username"
-            ref={this.name}
-            />
-          <input
-            type="password"
-            placeholder="password"
-            ref ={this.password}  
-          />
-          <button
-            type="button"
-            onClick={this.handleClick}
-          >
-            Log In
-          </button>
-        </form>
-        <p>Don't have an account? <Link to='/signup'>Sign Up</Link></p>
-      </>
-    );
-  }
-}
+     <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+          </Typography>
+            <form  onSubmit={handleClick} ref={(element) => form = element} className={classes.form} noValidate>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Username"
+                name="username"
+                autoComplete="name"
+                autoFocus
+                type="text"
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                placeholder="password"
+              />
+            
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleClick}
+              >
+                Sign In
+            </Button>
+              <Grid item>
+                <Link to='/signup' variant="body2">{"Don't have an account? Sign Up"}</Link>
+              </Grid>
+              <Box mt={5}>
+                <Copyright />
+              </Box>
+            </form>
+          </div>
+        </Grid>
+      </Grid>
+    ) 
+};
+
 
 export default Login;

@@ -1,86 +1,157 @@
 import axios from 'axios';
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+// import Link from '@material-ui/core/Link';
+import Paper from '@material-ui/core/Paper';
+import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
-class SignUp extends React.Component {
-    constructor() {
-        super();
-        this.name = React.createRef();
-        this.password = React.createRef();
-        this.confirmedPassword = React.createRef();
-        this.state = {
-            errorMessage: '',
-        };
-        this.handleClick = this.handleClick.bind(this);
-    }
+function Copyright() {
+  return (
+    <Typography variant="body2" color="textSecondary" align="center">
+      {'Copyright © '}
+      <Link color="inherit" href="https://github.com/Gemeni/LiveChat">
+        Gemeni
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
+}
 
-   
-handleClick(event) {
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: '100vh',
+  },
+  image: {
+    backgroundImage: 'url(https://source.unsplash.com/random)',
+    backgroundRepeat: 'no-repeat',
+    backgroundColor:
+      theme.palette.type === 'light' ? theme.palette.grey[50] : theme.palette.grey[900],
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+  },
+  paper: {
+    margin: theme.spacing(8, 4),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+function SignUp()  {
+    const classes = useStyles();
+    let form = React.createRef();
+
+        
+    function handleClick(event) {
         event.preventDefault();
-        const username = this.name.value;
-        const password = this.password.value;
-        const confirmedPassword = this.confirmedPassword.value;
-        if (password !== confirmPassword) {
-
+  
+        const { username, password, confirmedPassword } = form;
+        
+        if (password.value !== confirmedPassword.value) {
             const errorMessage = 'Please enter the same password in the "Confirm Password" field';
-        // if not, display error message
-            this.setState(() => ({
-                errorMessage,
-            }));
-        } else {
-            this.setState(() => ({
-                errorMessage: '',
-            }));
         }  
-       // send username and password to server and wait for response from server
-        // fetch('/api/signup', {
-        //     method: 'POST',
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data',
-        //     },
-        //     body: {
-        //         username,
-        //         password,
-        //     },
-        // })
+    
         axios.post('http://localhost:3000/api/signup',{
-            username,
-            password
+            username:username.value,
+            password:password.value
         })
-        //if all ok from server response, redirect to main page of app
         .then(data => {
         })
         .catch(err => console.log(err));
 
     }
-    render() {
-        return (
-            <>
-            <h3>Sign Up</h3>
-            <form onSubmit={this.handleClick}>
-                <input 
-                    type="text"
-                    placeholder="username"
-                    ref={(name) => this.name = name}
-                    required
-                    />
-                <input 
-                    type="password"
-                    placeholder="password"
-                    ref ={(password) => this.password = password}  
-                    required
-                    />
-                <input 
-                    type="password"
-                    placeholder="confirm password"
-                    ref ={(confirmedPassword) => this.confirmedPassword = confirmedPassword}  
-                    required
-                    />
-                <button type="button" onSubmit={this.handleClick} onClick={this.handleClick}>Sign Up</button>
-                <h2>{this.state.errorMessage}</h2>
+    return (
+       <Grid container component="main" className={classes.root}>
+        <CssBaseline />
+        <Grid item xs={false} sm={4} md={7} className={classes.image} />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign Up
+          </Typography>
+            <form  onSubmit={handleClick} ref={(element) => form = element} className={classes.form} noValidate>
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Username"
+                name="username"
+                autoComplete="name"
+                autoFocus
+                type="text"
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                placeholder="password"
+              />
+							<TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="confirmedPassword"
+                label="Confirm password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+                placeholder="confirmed password"
+              />
+            
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+            </Button>
+              <Grid item>
+                <Link to='/login' variant="body2">{"Already have an account? Sign in"}</Link>
+              </Grid>
+              <Box mt={5}>
+                <Copyright />
+              </Box>
             </form>
-        </>
-        )
-    }
-}
+          </div>
+        </Grid>
+      </Grid>
+    )
+    };
 
 export default SignUp;
