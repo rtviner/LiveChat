@@ -9,11 +9,12 @@ module.exports = {
   },
   mode: process.env.NODE_ENV,
   devServer: {
-    publicPath: '/',
-    port: 8080,
+    // publicPath: '/',
+    // port: 8080,
     proxy: {
-      '/api': 'localhost:3000',
+      '/api/': 'http://localhost:3000',
     },
+    historyApiFallback : true
   },
   module: {
     rules: [
