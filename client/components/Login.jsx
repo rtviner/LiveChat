@@ -24,15 +24,16 @@ class Login extends React.Component {
     }));
   }
 
-  handleClick() {
+  handleClick(event) {
+    event.prevent
     const { username, password } = this.state;
     const { push } = useHistory();
     // fetch user info by sending username and password
     fetch('/api/login', {
-      method: 'GET',
+      method: 'POST',
       'Content-Type': 'multipart/form-data',
       data: {
-        username, 
+        username,
         password,
       },
     }).then((data) => {
