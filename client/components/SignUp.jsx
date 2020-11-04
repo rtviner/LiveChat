@@ -1,41 +1,31 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 
 class SignUp extends React.Component {
     constructor() {
         super();
+        this.name = React.createRef();
+        this.password = React.createRef();
+        this.confirmedPassword = React.createRef();
         this.state = {
-            username: '',
-            password: '',
-            confirmPassword: '',
             errorMessage: '',
         };
-        this.handleChange = this.handleChange.bind(this);
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleChange(event, key) {
-        // on input box change, save username and password into state
-        this.setState((prevState) => ({
-            ...prevState,
-            [key]: event.target.value,
-        }));
-    }
-
-    handleClick() {
-        const { push } = useHistory();
-        const { password, username } =  this.state;
-        // check if password is the same as confirmPassword
-        if (this.state.password !== this.state.confirmPassword) {
+    handleClick(event) {
+        event.preventDefault();
+        const username = this.name.value;
+        const password = this.password.value;
+        const confirmedPassword = this.confirmedPassword.value;
+       
+        if (password !== confirmPassword) {
             const errorMessage = 'Please enter the same password in the "Confirm Password" field';
         // if not, display error message
-            this.setState((prevState) => ({
-                ...prevState,
+            this.setState(() => ({
                 errorMessage,
             }));
         } else {
-            this.setState((prevState) => ({
-                ...prevState,
+            this.setState(() => ({
                 errorMessage: '',
             }));
         }  
@@ -52,11 +42,6 @@ class SignUp extends React.Component {
         })
         //if all ok from server response, redirect to main page of app
         .then(data => {
-            const { isLoggedIn } = data;
-            // if isLogged in is true, redirect to main page
-            if (isLoggedIn) return push('/main');
-            // else, redirect to login
-            return push('/login');
         })
         .catch(err => console.log(err));
 
@@ -65,23 +50,23 @@ class SignUp extends React.Component {
         return (
             <>
             <h3>Sign Up</h3>
-            <form style={{display: 'flex', flexDirection: 'column'}}>
+            <form onSubmit={this.handleClick}>
                 <input 
                     type="text"
                     placeholder="username"
-                    onChange={(event) => this.handleChange(event, 'username')}
+                    ref={(name) => this.name = name}
                     required
                     />
                 <input 
                     type="password"
                     placeholder="password"
-                    onChange={(event) => this.handleChange(event, 'password')}
+                    ref ={(password) => this.password = password}  
                     required
                     />
                 <input 
                     type="password"
                     placeholder="confirm password"
-                    onChange={(event) => this.handleChange(event, 'confirmPassword')}
+                    ref ={(confirmedPassword) => this.confirmedPassword = confirmedPassword}  
                     required
                     />
                 <button type="button" onSubmit={this.handleClick} onClick={this.handleClick}>Sign Up</button>

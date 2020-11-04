@@ -1,35 +1,27 @@
 import React, { useContext } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 class Login extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+    this.name = React.createRef();
+    this.password = React.createRef();
     this.state = {
-      username: '',
-      password: '',
       errorMessage: '',
     };
-    this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    
   }
 
-  handleChange(event, key) {
-    // on change of input box,
-    // change the state of the passed in key
-    // and return the new state with the
-    // event.target.value (input box text)
-    this.setState((prevState) => ({
-      ...prevState,
-      [key]: event.target.value,
-    }));
-  }
-
-  handleClick() {
-    const { username, password } = this.state;
-    const { push } = useHistory();
+  handleClick(event) {
+    event.preventDefault();
+    const username = this.name.value;
+    const password = this.password.value;
+    //console.log("username: " + username, "password: " + password);
+  
     // fetch user info by sending username and password
     fetch('/api/login', {
-      method: 'GET',
+      method: 'POST',
       'Content-Type': 'multipart/form-data',
       data: {
         username, 
@@ -39,7 +31,7 @@ class Login extends React.Component {
       const { isLoggedIn } = data;
       // if user is logged in
       // redirect to main page
-      if (isLoggedIn) return push('/main');
+      if (isLoggedIn) return push('/chatroom');
       // else
       // set error message to 'Wrong username or password!'
       this.setState((prevState) => {
@@ -52,22 +44,21 @@ class Login extends React.Component {
       return push('/login');
     }).catch((err) => console.log(err));
   }
-
   render() {
     return (
       <>
         <p>{this.state.errorMessage}</p>
         <h3>Login</h3>
-        <form style={{display: 'flex', flexDirection: 'column'}}>
+        <form onSubmit={this.handleClick} >
           <input
             type="text"
             placeholder="username"
-            onChange={(event) => this.handleChange(event, 'username')}
+            ref={(name) => this.name = name}
             />
           <input
             type="password"
             placeholder="password"
-            onChange={(event) => this.handleChange(event, 'password')}
+            ref ={(password) => this.password = password}  
           />
           <button
             type="button"
@@ -81,5 +72,7 @@ class Login extends React.Component {
     );
   }
 }
+
+
 
 export default Login;
