@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 
 class SignUp extends React.Component {
@@ -12,13 +13,14 @@ class SignUp extends React.Component {
         this.handleClick = this.handleClick.bind(this);
     }
 
-    handleClick(event) {
+   
+handleClick(event) {
         event.preventDefault();
         const username = this.name.value;
         const password = this.password.value;
         const confirmedPassword = this.confirmedPassword.value;
-       
         if (password !== confirmPassword) {
+
             const errorMessage = 'Please enter the same password in the "Confirm Password" field';
         // if not, display error message
             this.setState(() => ({
@@ -30,15 +32,19 @@ class SignUp extends React.Component {
             }));
         }  
        // send username and password to server and wait for response from server
-        fetch('/api/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            body: {
-                username,
-                password,
-            },
+        // fetch('/api/signup', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data',
+        //     },
+        //     body: {
+        //         username,
+        //         password,
+        //     },
+        // })
+        axios.post('http://localhost:3000/api/signup',{
+            username,
+            password
         })
         //if all ok from server response, redirect to main page of app
         .then(data => {

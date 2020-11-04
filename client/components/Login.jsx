@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,20 +19,15 @@ class Login extends React.Component {
     const username = this.name.value;
     const password = this.password.value;
     //console.log("username: " + username, "password: " + password);
-  
-    // fetch user info by sending username and password
-    fetch('/api/login', {
-      method: 'POST',
-      'Content-Type': 'multipart/form-data',
-      data: {
-        username, 
-        password,
-      },
-    }).then((data) => {
+
+    axios.post('http://localhost:3000/api/login',{
+        username,
+        password
+      
+    })
+    .then((data) => {
       const { isLoggedIn } = data;
-      // if user is logged in
-      // redirect to main page
-      if (isLoggedIn) return push('/chatroom');
+  
       // else
       // set error message to 'Wrong username or password!'
       this.setState((prevState) => {
@@ -41,7 +37,7 @@ class Login extends React.Component {
         }
       });
       // redirect to login page
-      return push('/login');
+      // return push('/login');
     }).catch((err) => console.log(err));
   }
   render() {
@@ -53,12 +49,12 @@ class Login extends React.Component {
           <input
             type="text"
             placeholder="username"
-            ref={(name) => this.name = name}
+            ref={this.name}
             />
           <input
             type="password"
             placeholder="password"
-            ref ={(password) => this.password = password}  
+            ref ={this.password}  
           />
           <button
             type="button"
@@ -72,7 +68,5 @@ class Login extends React.Component {
     );
   }
 }
-
-
 
 export default Login;
