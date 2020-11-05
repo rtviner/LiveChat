@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, useHistory } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,6 +14,7 @@ import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+
 
 function Copyright() {
   return (
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login(props) {
   const classes = useStyles();
+  const history = useHistory();
    let form = React.createRef();
 
   function handleClick(event) {
@@ -74,7 +76,12 @@ function Login(props) {
       
     })
     .then((data) => {
-      const { isLoggedIn } = data;
+      // check for status 200
+      if (data.status === 200) {
+        props.onLogin(username.value);
+        history.push('/')
+      }
+
     }).catch((err) => console.log(err));
   }
 

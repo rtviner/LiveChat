@@ -5,19 +5,32 @@ import SignUp from './components/SignUp.jsx';
 import Chatroom from './components/Chatroom.jsx';
 
 class App extends React.Component {
+  
+  constructor(props) {
+    super(props)
+    this.state = {
+    username: null
+  }
+    this.setUserName = this.setUserName.bind(this)
+  }
 
+  setUserName(name) {
+    this.setState({
+      username:name
+    })
+  }
 
   render() {
     return (
       <div >
         <Route exact path='/'>
-          <Chatroom />
+          <Chatroom username={this.state.username}/>
         </Route>
         <Route exact path='/login' >
-          <Login />
+          <Login onLogin={this.setUserName}/>
         </Route>
         <Route path='/signup'>
-          <SignUp />
+          <SignUp onLogin={this.setUserName}/>
         </Route>
       </div>
     )
