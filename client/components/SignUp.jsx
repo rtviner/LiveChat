@@ -1,5 +1,6 @@
+import axios from 'axios';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 class SignUp extends React.Component {
     constructor() {
@@ -22,9 +23,11 @@ class SignUp extends React.Component {
         }));
     }
 
-    handleClick() {
-        const { push } = useHistory();
+    handleClick(e) {
+        e.preventDefault();
+        // const { push } = useHistory();
         const { password, username } =  this.state;
+        console.log(password,username)
         // check if password is the same as confirmPassword
         if (this.state.password !== this.state.confirmPassword) {
             const errorMessage = 'Please enter the same password in the "Confirm Password" field';
@@ -40,23 +43,28 @@ class SignUp extends React.Component {
             }));
         }  
        // send username and password to server and wait for response from server
-        fetch('/api/signup', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-            body: {
-                username,
-                password,
-            },
+        // fetch('/api/signup', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'multipart/form-data',
+        //     },
+        //     body: {
+        //         username,
+        //         password,
+        //     },
+        // })
+        axios.post('http://localhost:3000/api/signup',{
+            username,
+            password
         })
         //if all ok from server response, redirect to main page of app
         .then(data => {
             const { isLoggedIn } = data;
             // if isLogged in is true, redirect to main page
-            if (isLoggedIn) return push('/main');
+            // if (isLoggedIn) return push('/main');
             // else, redirect to login
-            return push('/login');
+            // return push('/login');
+            console.log("yay you logged in")
         })
         .catch(err => console.log(err));
 

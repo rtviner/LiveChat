@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 
@@ -27,20 +28,27 @@ class Login extends React.Component {
   handleClick(event) {
     event.prevent
     const { username, password } = this.state;
-    const { push } = useHistory();
+    console.log(username, password)
+    // const { push } = useHistory();
     // fetch user info by sending username and password
-    fetch('/api/login', {
-      method: 'POST',
-      'Content-Type': 'multipart/form-data',
-      data: {
+    // fetch('http://localhost:3000/api/login', {
+    //   method: 'GET',
+    //   'Content-Type': 'multipart/form-data',
+    //   data: {
+    //     username, 
+    //     password,
+    //   },
+    // })
+    axios.post('http://localhost:3000/api/login',{
         username,
-        password,
-      },
-    }).then((data) => {
+        password
+      
+    })
+    .then((data) => {
       const { isLoggedIn } = data;
       // if user is logged in
       // redirect to main page
-      if (isLoggedIn) return push('/main');
+      // if (isLoggedIn) return push('/main');
       // else
       // set error message to 'Wrong username or password!'
       this.setState((prevState) => {
@@ -50,7 +58,7 @@ class Login extends React.Component {
         }
       });
       // redirect to login page
-      return push('/login');
+      // return push('/login');
     }).catch((err) => console.log(err));
   }
 
